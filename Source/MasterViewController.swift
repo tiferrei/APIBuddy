@@ -100,7 +100,7 @@ class MasterViewController: UITableViewController {
         self.present(alertController, animated: true)
     }
 
-    func parse<T: Codable>(_ response: Response<T>, for view: DetailViewController, with config: TokenConfiguration, and params: [String: String] = [:]) {
+    func parse<T: UCLResponse>(_ response: Response<T>, for view: DetailViewController, with config: TokenConfiguration, and params: [String: String] = [:]) {
         switch response {
         case .success(let responseData):
             view.request["HTTP STATUS"] = "200 OK"

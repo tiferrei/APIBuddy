@@ -21,7 +21,7 @@ class DetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(DetailViewController.refresh), for: .valueChanged)
+        refreshControl?.addTarget(self, action: #selector(DetailViewController.refresh), for: UIControl.Event.valueChanged)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -70,19 +70,28 @@ extension DetailViewController {
             if let value = data[field] as? String {
                 cell.selectionStyle = .none
                 cell.isUserInteractionEnabled = false
-
                 cell.detailTextLabel?.text = value
+            } else if let value = data[field] as? [String] {
+                cell.selectionStyle = .none
+                cell.isUserInteractionEnabled = false
+                cell.detailTextLabel?.text = value.filter { $0 != "" }.joined(separator: ", ")
+            } else if let value = data[field] as? Bool {
+                cell.selectionStyle = .none
+                cell.isUserInteractionEnabled = false
+                cell.detailTextLabel?.text = String(value)
+            } else if let value = data[field] as? Int {
+                cell.selectionStyle = .none
+                cell.isUserInteractionEnabled = false
+                cell.detailTextLabel?.text = String(value)
             } else if let nodes = data[field] as? [String: Any] {
                 tableView.allowsSelection = true
                 cell.isUserInteractionEnabled = true
                 cell.accessoryType = .disclosureIndicator
-
                 cell.detailTextLabel?.text = "\(nodes.count) nodes"
             } else if let nodes = data[field] as? [Any] {
                 tableView.allowsSelection = true
                 cell.isUserInteractionEnabled = true
                 cell.accessoryType = .disclosureIndicator
-
                 cell.detailTextLabel?.text = "\(nodes.count) nodes"
             }
             return cell
@@ -118,10 +127,10 @@ extension DetailViewController {
             if request.isEmpty {
                 return CGFloat.leastNormalMagnitude
             } else {
-                return UITableViewAutomaticDimension
+                return UITableView.automaticDimension
             }
         case .data:
-            return UITableViewAutomaticDimension
+            return UITableView.automaticDimension
         }
     }
 
